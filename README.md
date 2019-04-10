@@ -1,6 +1,6 @@
 # Stronghold
 
-*DISCLAIMER* current version marked as `1.0.6-alpha`  as such it is considered in preview/alpha
+*DISCLAIMER* current version marked as `alpha-1.0.6`  as such it is considered in preview/alpha
 
 ## DESCRIPTION
 
@@ -18,37 +18,43 @@ You can find samples in the [docs](./docs/README.md)
 
 Deployment strategy:
 
-* currently deployed into a VM accessing the filesystem directly or in a docker
+* currently deployable into a VM or Docker accessing the filesystem directly
 * initialised and process managed through PM2 - `ecosystem.json`
   * pm2 startup - run this to create systemd script that ensures app is restarted on bootup/restart
   * pm2 save - run this to save the script in your systems process module
 
+It is adviseable to run locally first to gain the understanding of the app and how to use the environment variables and config and secrets.
+
 ## SETUP
 
-It's down to the user to create the environment/container with all the dependencies they require for the various configuration and orchestration tooling - i.e. `terraform`, `ansible`, `serverless`, etc... however, they can be installed in via package managers, or downloaded into `virtualenv` or any other method user prefers - methods description below illustrates how they can be called/used. Either absolute path or if added to `PATH` or   
+It's down to the user to create the environment/container with all the dependencies they require for the various configuration and orchestration tooling - i.e. `terraform`, `ansible`, `serverless`, etc...
+
+These can be installed in via any package managers or any other method user prefers - methods description below illustrates how they can be called/used. 
+
+They need to be accessible from within the stronghold process, `apt`, `yum`, `brew`, etc... are all fine as well as just downloading a binary and pointing to it via its full path, this can be useful when trying out new versions tools or managing multiple versions of the same CLI.
+
+dded to `PATH` or   
 
 Required Dependecies:
 * node >= v8.x.x (preferable)
 * npm
 
-
 Optional:
-* pm2 (can be exchanged for any other process manager supervisord monitd etc...)
-* python (preferrably 3) 
+* pm2 (can be exchanged for any other process manager supervisord, monitd etc...)
+* python (preferrably 3) - if running Ansible and opting for dynamic inventory parser - see [notes](###Just\ \Some\ \Notes)
 * AWS account
-   * cloudwatch indexes set up  prior
+   * cloudwatch indexes set up prior 
      * `config/config.js` `[logConfig.cloudwatch.logGroup]` this is where you would place - see [config section](####CONFIG) 
-* Postman/Paw
-* ...
+* Postman/Paw - for local testing and blue print creation for using within pipeline definitions
 
-Environment variables, injected from e.g. `ecosystem.json` when using pm2 or any other tool of choice. 
 
-`PM2` example: 
+Environment variables must be injected for the app to function, see below for a list requirred/default ones, whether they come from `launch.json` or `ecosystem.json` or any other way you choose to provide them doesn't matter.
 
-`cd ${stronghold_dir} && pm2 ecosystem.json --environment dev`
+Run examples:
+- `PM2` example: `cd ${stronghold_dir} && pm2 start ecosystem.json --environment dev`
+- VSCode --> Debug --> `stronghold` 
 
- * sample stronghold environment variables, if using VSCode for local running of Stronghold `.vscode/launch.json` includes a runnable task `stronghold` (currently )
-
+Stronghold Environment Variables:
 ```JSON
 { 
   "env": {
@@ -72,6 +78,7 @@ Environment variables, injected from e.g. `ecosystem.json` when using pm2 or any
 
 
 #### ENVIRONMENT VARIABLES
+These are totally separate from the stronghold application runtime environment variables above.
 
 `envVars`
 ---
@@ -102,20 +109,21 @@ This map inside the body root of any payload can be used by the invoker as it su
 
 NB:
 --- 
-* `AWS_PROFILE` can and **should** also be specified in [pipeline](####PIPELINE), [orchestration](####ORCHESTRATION) or [configuration](####CONFIGURATION) payloads, inside `envVars` key in the body.
+* `AWS_PROFILE` can and **should** also be specified in [pipeline](####PIPELINE), [orchestration](####ORCHESTRATION) or [configuration](####CONFIGURATION) payloads, inside `envVars` key in the body, unless the CLI knows where to find defaults - e.g. with terraform if profile is unspecified and no access/secret keys are provided it should default to a profile called `default`.
+ 
 ```json
   { 
     "envVars": {
       ...
     }
   } 
-``` 
-* `STRONGHOLD_CUSTOM_AWS_PROFILE` can be set in this instance the environment variable ```"AWS_PROFILE": "MyStrongholdAWSProfile"``` will be removed when specified in the payload and the execution space spawned inside a separate child shell will be injected with your specified `AWS_PROFILE`. 
+```
+
+* `STRONGHOLD_CUSTOM_AWS_PROFILE` can be set in this instance the environment variable `"AWS_PROFILE": "MyStrongholdAWSProfile"` will be removed when specified in the payload and the execution space spawned inside a separate child shell will be injected with your specified `AWS_PROFILE`. 
 * If unspecified the `AWS_PROFILE` will be removed from the injected environment variables and it is down to the user to provide other forms of authentication. For example in case of [Terraform with AWS](https://www.terraform.io/docs/providers/aws/) running on Stronghold on an EC2 machine you  
 * `STRONGHOLD_INHERIT_AWS_PROFILE` can be set to `true` - this will inject existing STRONGHOLD AWS_PROFILE CREDENTIALS into each execution space. (This is the least recommended option, a) security reasons - you shouldn't use the same set of credentials for running STRONHGHOLD (requiring no admin/elevated platform access) and your IaaS/PaaS credentials under same profile. Accpetable for `Local` and `Dev`)
 
-Temporary note: once other examples from further cloud/platform providers are included and allow for a similar credential less `STS` or role based impersonation the scope of the `profile` will be expanded.
-
+Temporary note: once other examples from further cloud/platform providers are included and allow for a similar credential-less `STS` or role based impersonation the scope of the `profile` will be expanded.
 
 ## CONCEPTS
 
@@ -125,11 +133,15 @@ The REST interface is split into 3 main areas - `build`, `orchestrate`, `configu
 ---
 This is used as a logical separator between direct invocation of either `orchestrate` or `configure` methods as it should be used from pipeline file definitions, see `samples/` and  constructs a callback payload to resume an async operation in a given pipeline.
 
-Additionally it also contains a checkout method 
-CI callback interface is not documented as it's used internal only, see notes about how to debug this locally if need bo
+Additionally it also contains a checkout method which should be used when running stronghold outside of the build server - i.e. when the CI checkout directory is not reacheable by `stronghold`
 
-<!-- #### PAYLOAD BODY
-main body see examples below -->
+There is a callback interface which is not documented as it's only used internal, see notes about how to debug this locally if need be
+
+`orchestrate`
+---
+WIP:
+...
+see examples/payloads below
 
 `configure`
 ---
@@ -138,11 +150,6 @@ WIP:
 see examples/payloads below
 
 
-`orchestrate`
----
-WIP:
-...
-see examples/payloads below
 
 
 #### Authorization
@@ -459,7 +466,7 @@ nvm alias default ${your preferred version}
 `npm run integration_test`
 
 
-### Author's Note
+### Just Some Notes
 When using Terraform for orchestration it is highly recommended to utilise workspaces as this will not only minimise your code base but allows for scale and parallelism which is `Stronghold`'s purpose 
 
 CI/CD tools integrated -currently only Jenkins and Gitlab are integrated - Gitlab as a container based tool will offer greater scale capacity as Jenkins (non-container version) (NB: WIP research Jenkins Containers within pipelines) 
