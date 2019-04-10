@@ -1,0 +1,140 @@
+#
+# OS
+#
+**/.DS_Store
+**/Thumbs.db
+
+#
+# Required Binaries - DO NOT CHANGE THIS
+#
+!**/bin/www
+!**/bin/init.sh
+
+#
+# compiled outputs
+#
+**/out
+**/bin
+**/.scannerwork
+**/.coverage
+**/coverage.xml
+**/__pycache__
+**/coverage/lcov-report/*
+**/coverage/lcov.info
+# dependencies
+**/*.pyc
+**/node_modules
+**/dependency*.html
+**/dependency*.log
+
+
+#
+# IDEs and editors
+#
+**/.idea
+**/*.iml
+**/*.iws
+**/.classpath
+**/.project
+**/.settings
+**/.factorypath
+**/filetypes.xml
+**/debugger.xml
+**/.c9/
+**/*.launch
+**/*.sublime-workspace
+## **/.vscode/*
+**/.vscode/settings.json
+# !**/!.vscode/tasks.json
+# **/!.vscode/launch.json
+# **/!.vscode/extensions.json
+
+#
+# python
+#
+**/env*
+.Python
+**/build/
+**/develop-eggs/
+**/dist/
+**/downloads/
+**/eggs/
+**/.eggs/
+**/lib/
+**/lib64/
+**/parts/
+**/sdist/
+**/var/
+**/wheels/
+**/*.egg-info/
+**/.installed.cfg
+*.egg
+**/MANIFEST
+
+#
+# java
+#
+**/build
+**/target
+**/*.jar
+
+#
+# gradle
+#
+**/.gradle
+
+#
+# python
+#
+**/env*
+
+#
+# misc
+#
+**/.vagrant
+**/*.retry
+**/*.pem
+**/.ppk
+**/*.zip
+**/*.gz
+**/*.tar.gz
+**/*.log
+**/.kitchen
+**/test-id*
+**/infrastructure
+**/settings.json
+**/reports
+**/*.lcov*
+**/coverage
+**/*.pyc
+**/__temp*
+**/test/*.html
+**/.nyc*
+**/*.crt
+**/*.csr
+**/*.key
+**/*.pub
+
+#
+# terraform
+#
+**/.terraform
+**/terraform.tfstate
+**/terraform.tfstate.*
+**/*.pub
+**/terraform.tfvars
+
+#
+# stronghold
+#
+**/__secrets*
+
+#
+# Legacy projects
+#
+
+#
+# Sonar & OWASP & misc analysis tools
+#
+**/sonar*
+**/*-report.json

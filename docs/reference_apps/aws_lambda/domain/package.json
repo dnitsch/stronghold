@@ -1,0 +1,18 @@
+{
+  "name": "stronghold_reference_app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node _testdriver.js"
+  },
+  "description": "sample app for lambda deployment",
+  "author": {
+    "name": "Dusan.Nitschneider"
+  },
+  "dependencies": {
+    "@anabode/shared_rest_responder": "^1.0.10"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.437.0"
+  }
+}

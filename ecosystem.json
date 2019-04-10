@@ -1,0 +1,47 @@
+﻿{
+    "apps": [
+      {
+        "name": "stronghold",
+        "script": "./bin/www",
+        "cwd": "/var/idam/control-plane/business/stronghold",
+        "watch": true,
+        "instances": 0,
+        "exec_mode": "cluster",
+        "env": {
+          "NODE_ENV": "dev",
+          "AWS_DEFAULT_REGION": "eu-west-1",
+          "PORT": 1337,
+          "BASE_URL": "http://localhost:1337/",
+          "LOGGER_TYPE": "cloudwatch",
+          "CW_LOG_GROUP_BASE": "/myorg/sharedservices",
+          "STRONGHOLD_LOG_EVENT_SIZE": 3,
+          "STRONGHOLD_TERRAFORM_PARALLELISM": "20"
+        },
+        "env_dev": {
+          "NODE_ENV": "dev",
+          "AWS_DEFAULT_REGION": "eu-west-1",
+          "PORT": 1337,
+          "BASE_URL": "http://localhost:1337/",
+          "LOGGER_TYPE": "cloudwatch",
+          "STRONGHOLD_LOG_EVENT_SIZE": 3,
+          "STRONGHOLD_TERRAFORM_PARALLELISM": "20"
+        },
+        "env_staging": {
+          "NODE_ENV": "staging"
+        },
+        "env_prod": {
+          "NODE_ENV": "prod"
+        },
+        "env_container": {
+          "NODE_ENV": "dev",
+          "AWS_DEFAULT_REGION": "eu-west-1",
+          "PORT": 1337,
+          "BASE_URL": "http://localhost:1337/",
+          "LOGGER_TYPE": "cloudwatch",
+          "CW_LOG_GROUP_BASE": "/myorg/sharedservices",
+          "STRONGHOLD_LOG_EVENT_SIZE": 3,
+          "STRONGHOLD_TERRAFORM_PARALLELISM": "20"
+        }
+      }
+    ]
+  }

@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [{
+      "type": "node",
+      "request": "launch",
+      "name": "stronghold",
+      "program": "${workspaceFolder}/bin/www",
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector",
+      "console": "internalConsole",
+      "outputCapture": "std",
+      "env": {
+        "NODE_ENV": "dev",
+        "AWS_PROFILE": "idam-workstation-stronghold",
+        // "AWS_ACCESS_KEY_ID": "",
+        // "AWS_SECRET_ACCESS_KEY": "",
+        "AWS_REGION": "eu-west-1",
+        "AWS_DEFAULT_REGION": "eu-west-1",
+        "PORT": "1337",
+        "BASE_URL": "http://localhost:1337/",
+        "LOGGER_TYPE": "cloudwatch",
+        "LOG_LEVEL": "debug",
+        "CW_LOG_GROUP_BASE": "/myorg/sharedservices",
+        "STRONGHOLD_LOG_EVENT_SIZE": "10",
+        "STRONGHOLD_TERRAFORM_PARALLELISM": "100",
+        "AUTH_MODE": "none",
+        "STREAM_REMOTE_LOGGER": false
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha Debug All",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "--timeout",
+        "999999",
+        "--colors",
+        "${workspaceFolder}/test/**/*.test.js"
+      ],
+      "console": "internalConsole",
+      "outputCapture": "std",
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha Debug Specific",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "--timeout",
+        "999999",
+        "--colors",
+        // "${workspaceFolder}/test/integration/buildToolingRoute.test.js"
+        // "${workspaceFolder}/test/unit/backgroundWorker.test.js"
+        "${workspaceFolder}/test/unit/sharedWorkers/sharedUtility.test.js"
+        // "${workspaceFolder}/test/integration/configurationRoute.test.js"
+      ],
+      "console": "internalConsole",
+      // "outputCapture": "std",
+    }
+    ]
+}

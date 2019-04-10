@@ -1,0 +1,71 @@
+{
+  "name": "stronghold",
+  "version": "1.0.6",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "unit_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/unit mocha ./test/unit/**/*.test.js",
+    "integration_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/integration mocha ./test/integration/*.test.js",
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release",
+    "cz": "git-cz"
+  },
+  "description": "Assembly API. \nInterfaces with CLI tooling for provisioning and configuring of infrastructure estates, as well as integrates with various Build Servers. \n",
+  "author": "DNitschneider <nitschneiderd@gmail.com> (https://github.com/dnitsch)",
+  "contributors": [
+    "Henry Dobson <> ()"
+  ],
+  "repository": {
+    "url": "https://github.com/dnitsch/stronghold.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dnitsch/stronghold/issues",
+    "email": "nitschneiderd@gmail.com"
+  },
+  "dependencies": {
+    "@amidoltd/shared-req-res-handler": "~1.0.3",
+    "basic-auth": "^2.0.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "^4.1.1",
+    "express": "~4.16.4",
+    "fs-extra": "^7.0.1",
+    "http-errors": "~1.6.2",
+    "lodash": "^4.17.10",
+    "morgan": "~1.9.0",
+    "pug": "^2.0.3",
+    "simple-git": "^1.107.0",
+    "stack-trace": "0.0.10",
+    "stronghold-logging-library-cw": "^1.0.6",
+    "stronghold-services-helper": "^1.0.6",
+    "when": "^3.7.8",
+    "winston": "^3.2.1",
+    "winston-aws-cloudwatch": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "4.2.0",
+    "chai-http": "^4.2.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "grunt": "^1.0.3",
+    "gulp-mocha": "^6.0.0",
+    "gulp-util": "^3.0.8",
+    "mocha": "^6.0.0",
+    "nyc": "^13.3.0",
+    "sinon": "^7.2.4",
+    "sonarqube-scanner": "^2.3.0"
+  },
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "license": "Apache-2.0",
+  "jshintConfig": {
+    "undef": true,
+    "unused": true,
+    "env": "node"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

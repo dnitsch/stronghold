@@ -1,0 +1,113 @@
+﻿{
+  "body": null,
+  "httpMethod": "GET",
+  "params": {
+    "path": {
+      "area": "myorg-jenkins",
+      "stage": "dev"
+    },
+    "querystring": {},
+    "header": {}
+  },
+  "headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "GB",
+    "Host": "lambda-sample.dev.domain.net",
+    "upgrade-insecure-requests": "1",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36",
+    "Via": "2.0 5888b5d9247925eeec6b1cf1ebf8aa8d.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "Q69NnMSXGgq1ucHYYilpQ07F7FdDXMyDN77W5UpPwcl3aAm1sNku8Q==",
+    "X-Amzn-Trace-Id": "Root=1-5c914046-03014ee44611df5464ed5948",
+    "X-Forwarded-For": "31.52.42.203, 70.132.20.79",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "multiValueHeaders": {
+    "Accept": [
+      "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+    ],
+    "Accept-Encoding": [
+      "gzip, deflate, br"
+    ],
+    "Accept-Language": [
+      "en-GB,en-US;q=0.9,en;q=0.8"
+    ],
+    "CloudFront-Forwarded-Proto": [
+      "https"
+    ],
+    "CloudFront-Is-Desktop-Viewer": [
+      "true"
+    ],
+    "CloudFront-Is-Mobile-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-SmartTV-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-Tablet-Viewer": [
+      "false"
+    ],
+    "CloudFront-Viewer-Country": [
+      "GB"
+    ],
+    "Host": [
+      "lambda-sample.dev.domain.net"
+    ],
+    "upgrade-insecure-requests": [
+      "1"
+    ],
+    "User-Agent": [
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36"
+    ],
+    "Via": [
+      "2.0 5888b5d9247925eeec6b1cf1ebf8aa8d.cloudfront.net (CloudFront)"
+    ],
+    "X-Amz-Cf-Id": [
+      "Q69NnMSXGgq1ucHYYilpQ07F7FdDXMyDN77W5UpPwcl3aAm1sNku8Q=="
+    ],
+    "X-Amzn-Trace-Id": [
+      "Root=1-5c914046-03014ee44611df5464ed5948"
+    ],
+    "X-Forwarded-For": [
+      "31.52.42.203, 70.132.20.79"
+    ],
+    "X-Forwarded-Port": [
+      "443"
+    ],
+    "X-Forwarded-Proto": [
+      "https"
+    ]
+  },
+  "queryStringParameters": null,
+  "pathParameters": {
+    "proxy": "v1/property/8e07d2ff-eac0-4151-a332-a30d8d0fb2f2/landlord/6e47a833-11fc-455d-9ceb-b9118a31942f"
+  },
+  "stage-variables": {},
+  "context": {
+    "account-id": "657364787281",
+    "api-id": "0i26dqwkj8",
+    "api-key": "test-invoke-api-key",
+    "authorizer-principal-id": "",
+    "caller": "AROAJGUMYDQ4NOCEXG3V4:dusan.nitschneider",
+    "cognito-authentication-provider": "",
+    "cognito-authentication-type": "",
+    "cognito-identity-id": "",
+    "cognito-identity-pool-id": "",
+    "http-method": "POST",
+    "stage": "test-invoke-stage",
+    "source-ip": "test-invoke-source-ip",
+    "user": "AROAJGUMYDQ4NOCEXG3V4:dusan.nitschneider",
+    "user-agent": "Apache-HttpClient/4.5.x (Java/1.8.0_144)",
+    "user-arn": "arn:aws:sts::657364787281:assumed-role/RootAdminAccess/dusan.nitschneider",
+    "request-id": "test-invoke-request",
+    "resource-id": "0uh62o",
+    "resource-path": "/logs/v1/{stage}/{area}"
+  }
+}
