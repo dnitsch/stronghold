@@ -188,13 +188,20 @@ const Config = {
             correlation_id: '219712y382378523523-234324234-23-932423-3232'
         }
     },
-    notifyBuildTool: {
+    notifyBuildToolInvalid: {
         callback_url: "https://some.pipeline.net/",
         callback_next: "test_dev",
         callback_pipeline_id: "2029--",
-        callback_project_id: "21",
+        callback_project_id: "21--",
         callback_ci_type: "gitlab",
-    }
+    },
+    // notifyBuildToolValid: {
+    //     callback_url: "https://some.pipeline.net/",
+    //     callback_next: "test_dev",
+    //     callback_pipeline_id: "2029",
+    //     callback_project_id: "21",
+    //     callback_ci_type: "gitlab",
+    // }
 }
 
 module.exports = Config;

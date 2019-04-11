@@ -71,7 +71,7 @@ describe('PUT /build/v2/pipeline/notify/:instruction?', function () {
             // const spy = sinon.spy(Notify.prototype, 'BuildServer');
             chai.request(app)
                 .put('/build/v2/pipeline/notify/proceed')
-                .send(config.notifyBuildTool)
+                .send(config.notifyBuildToolInvalid)
                 .end((err, res) => {
                     if (err) {
                         return done();
@@ -97,10 +97,10 @@ describe('PUT /build/v2/pipeline/notify/:instruction?', function () {
             expect(buildServerCb).to.respondTo('selector');
         });
         it('should include paylod with `callback_url`', function() {
-            config.notifyBuildTool.should.haveOwnProperty('callback_url');
+            config.notifyBuildToolInvalid.should.haveOwnProperty('callback_url');
         });
         it('should include paylod with `callback_ci_type`', function() {
-            config.notifyBuildTool.should.haveOwnProperty('callback_ci_type');
+            config.notifyBuildToolInvalid.should.haveOwnProperty('callback_ci_type');
         });
     })
 });
