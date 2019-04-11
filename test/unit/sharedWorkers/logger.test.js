@@ -6,43 +6,42 @@ const sinon = require('sinon'),
     config = require('../../config');
 
 chai.should();
-let _utilsFactory = null, stub = null;
+let logger = null, stub = null;
 
 describe('Logger interface', function() {
     beforeEach(function () {
         logger = require('../../../sharedWorkers/logger');
         // _utilsFactory = utilsFactory();
-        // stub = sinon.stub(backgroundWorker);
+        // stub = sinon.stub(logger);
     });
 
     afterEach(function () {
-        // backgroundWorker = null;
-        // stub = null;
+        logger = null;
     });
     describe('Winston', function () {
         it('should return a factory object', function() {
-            expect(_utilsFactory).to.be.an('object');
+            expect(logger).to.be.an('object');
         });
-        it('should include shellAbstractionWLog method', function() {
-            expect(_utilsFactory).to.respondTo('shellAbstractionWLog');
-        });
-        it('should include callbackExtendor method', function() {
-            expect(_utilsFactory).to.respondTo('callbackExtendor');
-        });
-        it('should include callbackExtendorCb method', function() {
-            expect(_utilsFactory).to.respondTo('callbackExtendorCb');
-        });
-        it('should include loggerAbstracted method', function() {
-            expect(_utilsFactory).to.respondTo('loggerAbstracted');
-        });
-        it('should include envHandler method', function() {
-            expect(_utilsFactory).to.respondTo('envHandler');
-        });
+        // it('should include shellAbstractionWLog method', function() {
+        //     expect(_utilsFactory).to.respondTo('shellAbstractionWLog');
+        // });
+        // it('should include callbackExtendor method', function() {
+        //     expect(_utilsFactory).to.respondTo('callbackExtendor');
+        // });
+        // it('should include callbackExtendorCb method', function() {
+        //     expect(_utilsFactory).to.respondTo('callbackExtendorCb');
+        // });
+        // it('should include loggerAbstracted method', function() {
+        //     expect(_utilsFactory).to.respondTo('loggerAbstracted');
+        // });
+        // it('should include envHandler method', function() {
+        //     expect(_utilsFactory).to.respondTo('envHandler');
+        // });
     });
 
     describe('utils method', function () {
         it('shellAbstractionWLog should be called', function() {
-            expect(_utilsFactory).to.be.an('object');
+            expect(logger).to.be.an('object');
         });
     })
 });

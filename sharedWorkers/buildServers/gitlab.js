@@ -129,9 +129,9 @@ GitlabWorker.prototype.notify = function (callback) {
 
 module.exports = GitlabWorker;
 
-//PRIVATE-TOKEN: 1cECRstjyDyuEdr27Xmb
+//PRIVATE-TOKEN: 2397h2340ntru
 //
-// BASE_URL: https://gitlab.bootstrap.atoshcp.net/api/v4/projects/idam%2Fidam
+// BASE_URL: https://gitlab.myorg.net/api/v4/projects/{projectID}
 //
 // Pipeline_ID, JOB_ID
 //

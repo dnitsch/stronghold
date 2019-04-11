@@ -53,9 +53,9 @@
         "--timeout",
         "999999",
         "--colors",
-        // "${workspaceFolder}/test/integration/buildToolingRoute.test.js"
+        "${workspaceFolder}/test/integration/buildToolingRoute.test.js"
         // "${workspaceFolder}/test/unit/backgroundWorker.test.js"
-        "${workspaceFolder}/test/unit/sharedWorkers/sharedUtility.test.js"
+        // "${workspaceFolder}/test/unit/sharedWorkers/logger.test.js"
         // "${workspaceFolder}/test/integration/configurationRoute.test.js"
       ],
       "console": "internalConsole",
