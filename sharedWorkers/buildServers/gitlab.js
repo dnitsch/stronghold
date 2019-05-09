@@ -124,9 +124,6 @@ GitlabWorker.prototype.notify = function (callback) {
     }
 };
 
-// vav
-// GitlabWorker.prototype.getResult
-
 module.exports = GitlabWorker;
 
 //PRIVATE-TOKEN: 2397h2340ntru

@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "unit_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/unit -x **/*.html -x **/*.css mocha ./test/unit/**/*.test.js",
-    "integration_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/integration mocha ./test/integration/*.test.js",
+    "test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/combined -x **/*.html -x **/*.css mocha ./test/**/*.test.js",
+    "unit_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/unit -x **/*.html -x **/*.css -x **/*.test.js mocha ./test/unit/**/*.test.js",
+    "integration_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/integration -x **/*.html -x **/*.css mocha ./test/integration/*.test.js",
     "travis-deploy-once": "travis-deploy-once",
     "semantic-release": "semantic-release",
     "cz": "git-cz"

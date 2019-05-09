@@ -1,7 +1,8 @@
 ﻿'use strict';
 
 const router = require('express').Router(),
-    RestModel = require('@amidoltd/shared-req-res-handler');
+    RestModel = require('@amidoltd/shared-req-res-handler'),
+    configureFactory = require('./configurationFactory')();
 
 /**
  * ConfigManager run
@@ -9,8 +10,7 @@ const router = require('express').Router(),
  */
 router.put('/playbook/:stage/:app_name/:commit_id?/:provider?', function (req, res) {
     const _req = req;
-    const CfgMgr = new (require('./configurationWorker'))(RestModel.Reqst.fullObject(_req));
-    CfgMgr.runConfigV2((e, d) => {
+    configureFactory.playbookConfigure(RestModel.Reqst.fullObject(_req), (e, d) => {
         if (e) {
             res.statusCode = 500;
             res.send(RestModel.Resp.errorResp(e, "ANSIBLE160x5")); // TODO stringify error response on app side

@@ -456,7 +456,7 @@ docker run -d \
 When using NVM and VSCode, you might need to do the following to avoid adding a specific `runtimeExecutable` into the `launch.json` definition
 
 ```bash 
-source ~/.bashrc ||  ~/.bash_profile; 
+source ~/.bashrc ||  ~****/.bash_profile; 
 nvm alias default ${your preferred version}
 ```
 
