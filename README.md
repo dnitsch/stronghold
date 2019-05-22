@@ -467,7 +467,7 @@ nvm alias default ${your preferred version}
 
 
 ### Just Some Notes
-When using Terraform for orchestration it is highly recommended to utilise workspaces as this will not only minimise your code base but allows for scale and parallelism which is `Stronghold`'s purpose 
+When using Terraform for orchestration it is highly recommended to utilise workspaces as this will not only minimise your code base but allow for scale and parallelism which is `Stronghold`'s purpose 
 
 CI/CD tools integrated -currently only Jenkins and Gitlab are integrated - Gitlab as a container based tool will offer greater scale capacity as Jenkins (non-container version) (NB: WIP research Jenkins Containers within pipelines) 
 
