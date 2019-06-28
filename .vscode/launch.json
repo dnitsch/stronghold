@@ -24,7 +24,7 @@
         "LOGGER_TYPE": "cloudwatch",
         "LOG_LEVEL": "debug",
         "CW_LOG_GROUP_BASE": "/myorg/sharedservices",
-        "STRONGHOLD_LOG_EVENT_SIZE": "10",
+        "STRONGHOLD_LOG_EVENT_SIZE": "5",
         "STRONGHOLD_TERRAFORM_PARALLELISM": "100",
         "AUTH_MODE": "none",
         "STREAM_REMOTE_LOGGER": false

@@ -4,7 +4,7 @@
 
 ## DESCRIPTION
 
-Stronghold is an add-on tool for your existing pipeline (CI/CD) infrastructure, by exposing a wrapped interface for the tooling traditionally invoked diurectly from within your YAML/JSON it aims to increase productivity and lower wait times - by offloading that work to a backrground process so your pipeline can handle higher concurrency. 
+Stronghold is an add-on tool for your existing pipeline (CI/CD) infrastructure, by exposing a wrapped interface for the tooling traditionally invoked directly from within your YAML/JSON it aims to increase productivity and lower wait times - by offloading that work to a backrground process so your pipeline can handle higher concurrency. 
 
 Currenlty, it is capable of handling most cli based tools, like serverless, chef (knife), saltstack, docker, aws/azure clis etc... However, it has a deep integration with [terraform](https://www.terraform.io/) as it also exposes specific workspace methods and handles certain initialization tasks when used in conjunction with Ansible.
 
@@ -16,7 +16,28 @@ This allows for parallel/concurrent process that aren't dependant on each other'
 
 You can find samples in the [docs](./docs/README.md)
 
+Just a few words on what it is and what it isn't:
+---
+
+**Stronghold** is *not* meant to speed up your current ansible/chef/terraform/etc.. runs - they will always take the same amount of time, unless you optimise the CLIs themselves - e.g. in `terraform` you can use the `parallelism` flag. Stronghold, however will run them in the background for you returning a `202 Accepted` to the CI container running the `curl` and hence freeing up that worker to continue with other tasks. This will raise the bar for when you need to start thinking about, if ever, of implementing scaling jobs/triggers for your CI workers to handle spikes in load.
+
+**Stronghold** can help you reduce complexity in your CI file definitions by interacting with your orchestration and conifugartion providers via a REST interface, including runtime environment variables and required invoke options.
+
+**Stronghold** will ensure that you are testing your deployments exactly the same way across all your environments - starting with your workstation. Reduces the need for multitude of `shell` scripts and creates a more manageable sharing environment across your team, optionally with the help of tools like `postman` and `paw`. See below for `method` definitions - TODO link to docs below.
+
+**Stronghold** is set up by default to log to a place of your choice so that you can search and find errors across whole system (all components/apps) you are deploying with the help of Stronghold in a single place  - e.g. `Cloudwatch`/`ElasticSearch`. See `LogObject` definition below (TODO: still WIP)
+
+<!-- 
+**Stronghold** will raise the bar for when you need to start thinking about, if ever, of implementing scaling jobs/triggers for your CI workers. -->
+
+
+
+help you reduce complexity in your CI file definitions 
+
+
 Deployment strategy:
+---
+
 
 * currently deployable into a VM or Docker accessing the filesystem directly
 * initialised and process managed through PM2 - `ecosystem.json`

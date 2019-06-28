@@ -5,8 +5,9 @@ const _ = require('lodash'),
     sharedUtils = require('../../sharedWorkers/sharedUtility')(),
     when = require('when'),
     conf = require('../../config/config')[(process.env.NODE_ENV || 'dev')],
-    ServiceHelper = require('stronghold-services-helper');
-// const ServiceHelper = require('../../libs/npm/Service-Helper');
+    util = require('util'),
+    ServiceHelper = require('stronghold-services-helper'),
+    ServiceHelperAsync = util.promisify(ServiceHelper.tcpSender.restAbstract);
 
 /** initialising the re-useable Ansible constructor
  * @param {}
@@ -22,132 +23,104 @@ function ConfigurationManager(entryObject) {
  * @param {function} callback - err, data
  * @returns {stuff}
  */
-ConfigurationManager.prototype.runConfigV2 = function (callback) {
+ConfigurationManager.prototype = {
+    /**
+     *
+     * @param {*} callback
+     * @returns {void}
+     */
+    async runConfigV2 (callback) {
+        const __input = this.obj;
+        // move this to log object builder
+        const logGroup = conf.logConfig[process.env.LOGGER_TYPE || 'cloudwatch'].logGroup + `/${__input.params.provider || 'aws'}/${__input.params.app_name}`,
+            logStream = `${__input.params.stage}-configuration-playbook`,
+            logCorrelationId = `${__input.params.stage}-${__input.params.commit_id}`;
+        const logOptions = {
+            logGroup: logGroup,
+            logStream: logStream,
+            correlation_id: logCorrelationId
+        };
 
-    let errorHandler = null;
+        /**
+         * @private
+         * conditional initialise
+         */
+        const init = async function() {
 
-    const _obj = this.obj;
-
-    const logGroup = conf.logConfig[process.env.LOGGER_TYPE || 'cloudwatch'].logGroup + `/${_obj.params.provider || 'aws'}/${_obj.params.app_name}`,
-        logStream = `${_obj.params.stage}-configuration-playbook`,
-        logCorrelationId = `${_obj.params.stage}-${_obj.params.commit_id}`;
-
-    let completeErr = '',
-        completeData = '';
-
-    when(initializeTf(_obj))
-        .then(cfgMgmtRun)
-        .then(callBackMotherShip)
-        .catch((err) => {
-            errorHandler = err;
-        })
-        .done((result) => {
-            if (errorHandler) {
-                sharedUtils.loggerAbstracted('error', JSON.stringify(errorHandler), logGroup, logStream, logCorrelationId);
+            if (_.isUndefined(__input.body.envVars.ANSIBLE_TF_BIN) || _.isUndefined(__input.body.envVars.ANSIBLE_TF_DIR)) {
+                throw new Error("ANSIBLE_TF_BIN and ANSIBLE_TF_DIR must be BOTH defined in order to run Terraform init");
             }
-            return;
-        })
-
-    function initializeTf(input) {
-        const _input = input;
-        return when.promise((resolve, reject) => {
-            const initTfFn = function (_input) {
-                const __input = _input;
-                // TODO: hanlde the body dynamically
-                if (__input.body.STRONGHOLD_tf_init) {
-                    if (_.isUndefined(__input.body.envVars.ANSIBLE_TF_BIN) || _.isUndefined(__input.body.envVars.ANSIBLE_TF_DIR)) {
-                        return reject(new Error("ANSIBLE_TF_BIN and ANSIBLE_TF_DIR must be BOTH defined in order to run Terraform init"));
-                    }
-
-                    const body = {
-                        envVars: sharedUtils.envHandler(__input.body.envVars),
-                        STRONGHOLD_orc_cwd: __input.body.envVars.ANSIBLE_TF_DIR,
-                        STRONGHOLD_orc_exec: __input.body.envVars.ANSIBLE_TF_BIN
-                    };
-
-                    ServiceHelper.tcpSender.restAbstract(`${process.env.BASE_URL}orchestration/v1/init/${__input.params.stage}/${__input.params.app_name}/${__input.params.commit_id}/${__input.params.provider || 'aws'}`, body, {}, {}, __input.header, "PUT", (e, d) => {
-                        if (e) {
-                            reject(e);
-                            return callback(e); // if init failed return to http socket and fail request
-                        } else {
-                            return resolve(__input);
-                        }
-                    });
-                } else {
-                    return resolve(__input);
-                }
+            // move to builder function
+            const body = {
+                envVars: sharedUtils.envHandler(__input.body.envVars),
+                STRONGHOLD_orc_cwd: __input.body.envVars.ANSIBLE_TF_DIR,
+                STRONGHOLD_orc_exec: __input.body.envVars.ANSIBLE_TF_BIN
             };
+            try {
+                const is_initialised = await ServiceHelperAsync(`${process.env.BASE_URL}orchestration/v1/init/${__input.params.stage}/${__input.params.app_name}/${__input.params.commit_id}/${__input.params.provider || 'aws'}`, body, {}, {}, __input.header, "PUT")
+                __input.is_initialised = is_initialised;
 
-            return initTfFn(_input);
-        });
-    }
+                return __input;
 
-    function cfgMgmtRun(_input) {
-        const __input = _input;
-        return when.promise((resolve, reject) => {
-            const ansibleRunFn = function (__input) {
-                const ___input = __input;
+            } catch (ex) {
+                return when.reject(ex);
+            }
+        }
+        /**
+         * @private
+         * runs configure run
+         */
+        const do_cfg = async function() {
+            __input.shellOptions = {
+                cwd: __input.body.STRONGHOLD_cfg_cwd,
+                detached: true,
+                env: sharedUtils.envHandler(__input.body.envVars),
+                shell: true
+            };
+            try {
+                __input.commandArray = _.isArray(__input.body.STRONGHOLD_cfg_command) ? __input.body.STRONGHOLD_cfg_command : __input.STRONGHOLD_cfg_command.split(',');
+                const cfg_out = await sharedUtils.shellAbstractionWLogAsync(__input.body.STRONGHOLD_cfg_exec, __input.commandArray, __input.shellOptions, logOptions);
+                // __input.mothership = (!(_.isEmpty(cfg_out.e)) || cfg_out.code != 0) ? false : true;
+                __input.mothership = cfg_out.code === 0 ? true : false;
 
-                ___input.shellOptions = {
-                    cwd: ___input.body.STRONGHOLD_cfg_cwd,
-                    detached: true,
-                    env: sharedUtils.envHandler(___input.body.envVars),
-                    shell: true
-                };
+                return __input;
+            } catch (ex) {
+                return when.reject(ex);
+            }
+        }
 
-                const logOptions = {
-                    logGroup: logGroup,
-                    logStream: logStream,
-                    correlation_id: logCorrelationId
-                };
-
-                ___input.commandArray = _.isArray(___input.body.STRONGHOLD_cfg_command) ? ___input.body.STRONGHOLD_cfg_command : ___input.STRONGHOLD_cfg_command.split(',');
-                sharedUtils.shellAbstractionWLog(___input.body.STRONGHOLD_cfg_exec, ___input.commandArray, ___input.shellOptions, logOptions, (e, d, code) => {
-                    if (!(_.isEmpty(e)) || code != 0) {
-                        ___input.mothership = false;
-                        return resolve(___input);
-                    } else {
-                        ___input.mothership = true;
-                        return resolve(___input);
-                    }
+        try {
+            if (__input.body.STRONGHOLD_tf_init) {
+                // return await init();
+                __input.init_done = await init().catch((err) => {
+                    __input.init_err = err;
                 });
-                // sharedUtils.shellAbstractionWLog(___input.body.STRONGHOLD_cfg_exec, ___input.commandArray, ___input.shellOptions, logOptions)
-                //     .then((data) => {
-                //         ___input.mothership = true;
-                //         return resolve(___input);
-                //     }).catch((err) => {
-                //         ___input.mothership = false;
-                //         return resolve(___input);
-                //     });
-                return callback(completeErr, completeData);
-            };
+            }
+            // const initialised = await initializeTf(_obj);
+            // return if successfully initialised;
+            // FIX: currently, can't think of another way to return out of the function but continue processing in the background without
+            //  handing over to another worker thread within this routine.
+            if (__input.init_err) {
+                return callback(__input.init_err);
+            } else {
+                callback(null, {});
+            }
 
-            return ansibleRunFn(__input);
-        });
+            const configured = await do_cfg();
+
+            if (__input.body.callback) {
+                const cb_called = await sharedUtils.callbackExtendorAsync(__input.body.callback_params, (configured.mothership ? 'proceed' : 'abort'), __input.header, logOptions);
+                __input.cb_called = cb_called;
+            } else {
+                console.log('No callback requested. Is this a local operation?');
+            }
+            // cb_called
+            return;
+        } catch (ex) {
+            sharedUtils.loggerAbstracted('error', JSON.stringify(`${ex.message} ${ex.stack}`), logGroup, logStream, logCorrelationId);
+            return when.reject(ex);
+        }
     }
-
-    function callBackMotherShip(input) {
-        const _input = input;
-        return when.promise((resolve, reject) => {
-            const callBackMotherShipFn = function (input) {
-                const __input = input;
-
-                if (__input.body.callback) {
-                    sharedUtils.callbackExtendor(__input.body.callback_params, (__input.mothership ? 'proceed' : 'abort'), __input.header);
-                    return resolve({
-                        OK: true
-                    });
-                } else {
-                    console.log('No callback requested. Is this a local operation?');
-                    return resolve({
-                        OK: true
-                    });
-                }
-            };
-
-            return callBackMotherShipFn(_input);
-        });
-    }
-};
+}
 
 module.exports = ConfigurationManager;
