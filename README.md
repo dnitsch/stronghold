@@ -4,7 +4,7 @@
 
 ## DESCRIPTION
 
-Stronghold is an add-on tool for your existing pipeline (CI/CD) infrastructure, by exposing a wrapped interface for the tooling traditionally invoked diurectly from within your YAML/JSON it aims to increase productivity and lower wait times - by offloading that work to a backrground process so your pipeline can handle higher concurrency. 
+Stronghold is an add-on tool for your existing pipeline (CI/CD) infrastructure, by exposing a wrapped interface for the tooling traditionally invoked directly from within your YAML/JSON it aims to increase productivity and lower wait times - by offloading that work to a backrground process so your pipeline can handle higher concurrency. 
 
 Currenlty, it is capable of handling most cli based tools, like serverless, chef (knife), saltstack, docker, aws/azure clis etc... However, it has a deep integration with [terraform](https://www.terraform.io/) as it also exposes specific workspace methods and handles certain initialization tasks when used in conjunction with Ansible.
 
@@ -13,10 +13,27 @@ Currenlty, it is capable of handling most cli based tools, like serverless, chef
 By creating a wrapper around the CLI tools, we can control the environment in which they are executed and pass in dynamic environment variables which are not conflicting with the underlying system on which stronghold runs.
 
 This allows for parallel/concurrent process that aren't dependant on each other's outputs.
-
+****
 You can find samples in the [docs](./docs/README.md)
 
+Just a few words on what it is and what it isn't:
+---
+
+**Stronghold** is *not* meant to speed up your current ansible/chef/terraform/etc.. runs - they will always take the same amount of time, unless you optimise the CLIs themselves - e.g. in `terraform` you can use the `parallelism` flag. Stronghold, however will run them in the background for you returning a `202 Accepted` to the CI container running the `curl` and hence freeing up that worker to continue with other tasks. This will raise the bar for when you need to start thinking about, if ever, of implementing scaling jobs/triggers for your CI workers to handle spikes in load.
+
+**Stronghold** can help you reduce complexity in your CI file definitions by interacting with your orchestration and conifugartion providers via a REST interface, including runtime environment variables and required invoke options.
+
+**Stronghold** will ensure that you are testing your deployments exactly the same way across all your environments - starting with your workstation. Reduces the need for multitude of `shell` scripts and creates a more manageable sharing environment across your team, optionally with the help of tools like `postman` and `paw`. See below for `method` definitions - TODO link to docs below.
+
+**Stronghold** is set up by default to log to a place of your choice so that you can search and find errors across whole system (all components/apps) you are deploying with the help of Stronghold in a single place  - e.g. `Cloudwatch`/`ElasticSearch`. See `LogObject` definition below (TODO: still WIP)
+
+<!-- 
+**Stronghold** will raise the bar for when you need to start thinking about, if ever, of implementing scaling jobs/triggers for your CI workers. -->
+
+
 Deployment strategy:
+---
+
 
 * currently deployable into a VM or Docker accessing the filesystem directly
 * initialised and process managed through PM2 - `ecosystem.json`
@@ -456,7 +473,7 @@ docker run -d \
 When using NVM and VSCode, you might need to do the following to avoid adding a specific `runtimeExecutable` into the `launch.json` definition
 
 ```bash 
-source ~/.bashrc ||  ~/.bash_profile; 
+source ~/.bashrc ||  ~****/.bash_profile; 
 nvm alias default ${your preferred version}
 ```
 
@@ -467,7 +484,7 @@ nvm alias default ${your preferred version}
 
 
 ### Just Some Notes
-When using Terraform for orchestration it is highly recommended to utilise workspaces as this will not only minimise your code base but allows for scale and parallelism which is `Stronghold`'s purpose 
+When using Terraform for orchestration it is highly recommended to utilise workspaces as this will not only minimise your code base but allow for scale and parallelism which is `Stronghold`'s purpose 
 
 CI/CD tools integrated -currently only Jenkins and Gitlab are integrated - Gitlab as a container based tool will offer greater scale capacity as Jenkins (non-container version) (NB: WIP research Jenkins Containers within pipelines) 
 

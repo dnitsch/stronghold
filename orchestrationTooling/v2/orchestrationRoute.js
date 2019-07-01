@@ -1,8 +1,8 @@
 ﻿'use strict';
 
-var router = require('express').Router(),
-    RestModel = require('@amidoltd/shared-req-res-handler');
-let orchestrationFactory = require('./orchestrationFactory')();
+const router = require('express').Router(),
+    RestModel = require('@amidoltd/shared-req-res-handler'),
+    orchestrationFactory = require('./orchestrationFactory')();
 
 /**
  * Manage workspace wrapper V2
@@ -12,7 +12,7 @@ let orchestrationFactory = require('./orchestrationFactory')();
  */
 router.post('/workspace/:stage/:app_name/:commit_id/:provider?', function (req, res) {
 
-    var _req = req;
+    const _req = req;
 
     orchestrationFactory.workspaceCreate(RestModel.Reqst.fullObject(_req), (e, d) => {
         if (e) {
@@ -35,7 +35,7 @@ router.post('/workspace/:stage/:app_name/:commit_id/:provider?', function (req, 
  */
 router.delete('/workspace/:stage/:app_name/:commit_id/:provider?', function (req, res) {
 
-    var _req = req;
+    const _req = req;
 
     orchestrationFactory.workspaceDelete(RestModel.Reqst.fullObject(_req), (e, d) => {
         if (e) {
@@ -57,7 +57,7 @@ router.delete('/workspace/:stage/:app_name/:commit_id/:provider?', function (req
  * @param  {} res
  */
 router.post('/generic/:stage/:app_name/:commit_id/:provider?', function (req, res) {
-    var _req = req;
+    const _req = req;
     // var orcWorker = new (require('./orchestrationGeneric'))(RestModel.Reqst.fullObject(_req));
     // orcWorker.((e, d) => {
     orchestrationFactory.genericOrchestrate(RestModel.Reqst.fullObject(_req), (e, d) => {

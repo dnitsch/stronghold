@@ -4,17 +4,16 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "unit_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/unit mocha ./test/unit/**/*.test.js",
-    "integration_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/integration mocha ./test/integration/*.test.js",
+    "test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/combined -x **/*.html -x **/*.css mocha ./test/**/*.test.js",
+    "unit_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/unit -x **/*.html -x **/*.css -x **/*.test.js mocha ./test/unit/**/*.test.js",
+    "integration_test": "nyc --reporter=lcov --reporter=text-lcov --report-dir coverage/integration -x **/*.html -x **/*.css mocha ./test/integration/*.test.js",
     "travis-deploy-once": "travis-deploy-once",
     "semantic-release": "semantic-release",
     "cz": "git-cz"
   },
   "description": "Assembly API. \nInterfaces with CLI tooling for provisioning and configuring of infrastructure estates, as well as integrates with various Build Servers. \n",
   "author": "DNitschneider <nitschneiderd@gmail.com> (https://github.com/dnitsch)",
-  "contributors": [
-    "Henry Dobson <> ()"
-  ],
+  "contributors": [],
   "repository": {
     "url": "https://github.com/dnitsch/stronghold.git"
   },
@@ -45,11 +44,11 @@
     "chai": "4.2.0",
     "chai-http": "^4.2.1",
     "cz-conventional-changelog": "^2.1.0",
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "gulp-mocha": "^6.0.0",
     "gulp-util": "^3.0.8",
-    "mocha": "^6.0.0",
-    "nyc": "^13.3.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
     "sinon": "^7.2.4",
     "sonarqube-scanner": "^2.3.0"
   },

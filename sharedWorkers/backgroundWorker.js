@@ -1,6 +1,7 @@
-﻿'use strict';
+'use strict';
 
 const _ = require('lodash'),
+    when = require('when'),
     shells = ["powershell.exe", "cmd.exe", "/bin/sh", "/bin/bash", "/bin/zsh"],
     Conf = require('../config/config')[(process.env.NODE_ENV || 'dev')];
 
@@ -27,55 +28,100 @@ function backgroundWorker() {
  * @param {Object} options shellOptions to pass into spawned process [details](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options)
  * @returns {}
  */
-backgroundWorker.prototype.spawnCallerBash = function (command, args, options, callback) { // TODO: make this more generic
+backgroundWorker.prototype = {
+       spawnCallerBash (command, args, options, callback) { // TODO: make this more generic
+            const _this = this;
+            const _command = command,
+                _args = args,
+                _options = options;
 
-    const _this = this;
-    const _command = command,
-        _args = args,
-        _options = options;
+            let errMe = '';
 
-    let errMe = '';
+            if (_.isUndefined(_this.unref)) {
+                // setting default behaviour
+                _this.unref = true;
+            } else {
+                _this.unref = _this.unref;
+            }
 
-    if (_.isUndefined(_this.unref)) {
-        // setting default behaviour
-        _this.unref = true;
-    } else {
-        _this.unref = _this.unref;
-    }
+            const spawn = _this.spawner(
+                _command,
+                _args,
+                _options
+            );
 
-    const spawn = _this.spawner(
-        _command,
-        _args,
-        _options
-    );
+            // unrefs by default else runs in foreground and coupled to parent process
+            if (_.isUndefined(_this.unref) || _.isNull(_this.unref) || _.isEmpty(_this.unref)) {
+                spawn.unref();
+            }
 
-    // unrefs by default else runs in foreground and coupled to parent process
-    if (_.isUndefined(_this.unref) || _.isNull(_this.unref) || _.isEmpty(_this.unref)) {
-        spawn.unref();
-    }
+            spawn.stdout.on('data', (data) => {
+                return callback(null, data.toString(), null);
+            });
 
-    spawn.stdout.on('data', (data) => {
-        return callback(null, data.toString(), null);
-    });
+            spawn.stderr.on('data', (err) => {
+                errMe += err.toString();
+                return callback(err.toString(), null, null);
+            });
 
-    spawn.stderr.on('data', (err) => {
-        errMe += err.toString();
-        return callback(err.toString(), null, null);
-    });
+            spawn.on('uncaughtException', (err) => {
+                errMe += err.toString();
+                return callback(errMe, null, null);
+            });
 
-    spawn.on('uncaughtException', (err) => {
-        errMe += err.toString();
-        return callback(errMe, null, null);
-    });
+            spawn.on('error', (err) => {
+                errMe += err.toString();
+                return callback(errMe, null, null);
+            });
 
-    spawn.on('error', (err) => {
-        errMe += err.toString();
-        return callback(errMe, null, null);
-    });
+            spawn.on('close', (code) => {
+                return callback(errMe, null, code);
+            });
+        },
+        async *backgroundWorkerAsync (command, args, options) {
+            const _this = this;
+            const _command = command,
+                _args = args,
+                _options = options;
 
-    spawn.on('close', (code) => {
-        return callback(errMe, null, code);
-    });
+            let errMe = '';
+
+            if (_.isUndefined(_this.unref)) {
+                // setting default behaviour
+                _this.unref = true;
+            } else {
+                _this.unref = _this.unref;
+            }
+
+            const spawn = _this.spawner(
+                _command,
+                _args,
+                _options
+            );
+
+            // unrefs by default else runs in foreground and coupled to parent process
+            if (_.isUndefined(_this.unref) || _.isNull(_this.unref) || _.isEmpty(_this.unref)) {
+                spawn.unref();
+            }
+            for await (const data of spawn.stdout) {
+                yield {data: data.toString(), err: null, code: null};
+
+            }
+            for await (const err of spawn.stderr) {
+                yield {data: null, err: err.toString(), code: null};
+            }
+
+            const return_code = function() {
+                return new Promise((resolve) => {
+                    spawn.on('close', (code) => {
+                        return resolve(code);
+                    })
+                })
+            }
+            const rc = await return_code();
+            const response = {data: null, err: null, code: rc}
+            return yield response;
+        }
 }
 
 module.exports = backgroundWorker;

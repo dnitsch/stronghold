@@ -75,16 +75,13 @@ TerraWorkerWorkSpaceCreate.prototype.workspaceCreateV2 = function (callback) {
                     return reject(new Error('Missing required property in body: STRONGHOLD_tf_workspace'));
                 }
 
-                if (!_.isUndefined(__input.body.STRONGHOLD_tf_args) && !_.isArray(__input.body.STRONGHOLD_tf_args)) {
-                    return reject(new Error('STRONGHOLD_tf_args property should be an array.'));
-                }
-
                 const cmdArr = [
                         __input.body.STRONGHOLD_orc_exec, 'workspace', 'select', __input.body.STRONGHOLD_tf_workspace, '&&',
-                        __input.body.STRONGHOLD_orc_exec, 'apply', __input.body.STRONGHOLD_tf_args ? __input.body.STRONGHOLD_tf_args.join(' ') : null, '-auto-approve=true', `-parallelism=${process.env.STRONGHOLD_TERRAFORM_PARALLELISM || 10}`
+                        __input.body.STRONGHOLD_orc_exec, 'apply', '-auto-approve=true', `-parallelism=${process.env.STRONGHOLD_TERRAFORM_PARALLELISM || 10}`
                     ];
 
-                const cmdText = _.join(_.compact(cmdArr), ' ');
+                // const cmdText = _.join(_.compact(cmdArr), ' ');
+                const cmdText = _.join(cmdArr, ' ');
 
                 // sharedUtils.shellAbstraction(cmdText, shellOptions, (e,d) => {
                 sharedUtils.shellAbstractionWLog(cmdText, [], __input.shellOptions, logOptions, (e, d) => {
@@ -117,10 +114,10 @@ TerraWorkerWorkSpaceCreate.prototype.workspaceCreateV2 = function (callback) {
                 const cmdArr = [
                         _inputWs.body.STRONGHOLD_orc_exec, 'workspace', 'new', _inputWs.body.STRONGHOLD_tf_workspace, '&&',
                         _inputWs.body.STRONGHOLD_orc_exec, 'workspace', 'select', _inputWs.body.STRONGHOLD_tf_workspace, '&&',
-                        _inputWs.body.STRONGHOLD_orc_exec, 'apply', _inputWs.body.STRONGHOLD_tf_args ? _inputWs.body.STRONGHOLD_tf_args.join(' ') : null, '-auto-approve=true', `-parallelism=${process.env.STRONGHOLD_TERRAFORM_PARALLELISM || 10}`
+                        _inputWs.body.STRONGHOLD_orc_exec, 'apply', '-auto-approve=true', `-parallelism=${process.env.STRONGHOLD_TERRAFORM_PARALLELISM || 10}`
                 ];
 
-                const cmdText = _.join(_.compact(cmdArr), ' ');
+                const cmdText = _.join(cmdArr, ' ');
 
                 sharedUtils.shellAbstractionWLog(cmdText, [], _inputWs.shellOptions, logOptions, (e, d) => {
                         if (e) {

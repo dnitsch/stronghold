@@ -74,12 +74,12 @@ TerraWorkerWorkSpaceDelete.prototype.workspaceDeleteV2 = function (callback) {
 
                 const cmdArr = [
                     execCommand, 'workspace', 'select', __input.body.STRONGHOLD_tf_workspace, '&&',
-                    execCommand, 'destroy', __input.body.STRONGHOLD_tf_args ? __input.body.STRONGHOLD_tf_args.join(' ') : null, '-force', '-lock=true', '-lock-timeout=0s', '-input=false', `-parallelism=${process.env.STRONGHOLD_TERRAFORM_PARALLELISM || 10}`, '-refresh=true', '&&',
+                    execCommand, 'destroy', '-force', '-lock=true', '-lock-timeout=0s', '-input=false', `-parallelism=${process.env.STRONGHOLD_TERRAFORM_PARALLELISM || 10}`, '-refresh=true', '&&',
                     execCommand, 'workspace', 'select', 'default', '&&',
                     execCommand, 'workspace', 'delete', __input.body.STRONGHOLD_tf_workspace
                 ];
 
-                const cmdText = _.join(_.compact(cmdArr), ' ');
+                const cmdText = _.join(cmdArr, ' ');
 
                 sharedUtils.shellAbstractionWLog(cmdText, [], shellOptions, logOptions, (e, d) => {
                     if (e) {

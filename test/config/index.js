@@ -170,6 +170,30 @@ const Config = {
             ANSIBLE_SSH_RETRIES: 5
         }
     },
+    validPlaybookData: {
+        STRONGHOLD_tf_init: false,
+        STRONGHOLD_cfg_command: ["all", "-i", "localhost,", "-c", "local", "-m", "shell", "-a", "'echo hello world'"],
+        STRONGHOLD_cfg_exec: "ansible",
+        envVars: {
+            ANSIBLE_TF_BIN: "terraform",
+            ANSIBLE_TF_DIR: __dirname,
+        }
+    },
+    invalidPlaybookData: {
+        callback: true,
+        callback_url: "https://gitlab.fake.example.net/idam/idam/pipelines/3659",
+        callback_next: "fake_job",
+        callback_pipeline_id: "3659",
+        callback_project_id: "21",
+        callback_ci_type: "gitlab",
+        STRONGHOLD_tf_init: false,
+        STRONGHOLD_cfg_command: ["all", "-i", "localhost,", "-c", "local", "-m", "shell", "-a", "'echo hello world'"],
+        STRONGHOLD_cfg_exec: "__ansible",
+        envVars: {
+            ANSIBLE_TF_BIN: "terraform",
+            ANSIBLE_TF_DIR: __dirname,
+        }
+    },
     commandRunner: {
         valid_command: "echo",
         err_command:"foo_bar",
@@ -187,7 +211,21 @@ const Config = {
             logStream: 'dev-provision-create',
             correlation_id: '219712y382378523523-234324234-23-932423-3232'
         }
-    }
+    },
+    notifyBuildToolInvalid: {
+        callback_url: "https://some.pipeline.net/",
+        callback_next: "test_dev",
+        callback_pipeline_id: "2029--",
+        callback_project_id: "21--",
+        callback_ci_type: "gitlab",
+    },
+    // notifyBuildToolValid: {
+    //     callback_url: "https://some.pipeline.net/",
+    //     callback_next: "test_dev",
+    //     callback_pipeline_id: "2029",
+    //     callback_project_id: "21",
+    //     callback_ci_type: "gitlab",
+    // }
 }
 
 module.exports = Config;
