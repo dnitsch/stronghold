@@ -13,7 +13,7 @@ Currenlty, it is capable of handling most cli based tools, like serverless, chef
 By creating a wrapper around the CLI tools, we can control the environment in which they are executed and pass in dynamic environment variables which are not conflicting with the underlying system on which stronghold runs.
 
 This allows for parallel/concurrent process that aren't dependant on each other's outputs.
-
+****
 You can find samples in the [docs](./docs/README.md)
 
 Just a few words on what it is and what it isn't:
@@ -29,10 +29,6 @@ Just a few words on what it is and what it isn't:
 
 <!-- 
 **Stronghold** will raise the bar for when you need to start thinking about, if ever, of implementing scaling jobs/triggers for your CI workers. -->
-
-
-
-help you reduce complexity in your CI file definitions 
 
 
 Deployment strategy:
